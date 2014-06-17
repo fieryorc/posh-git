@@ -4,7 +4,7 @@ posh-git
 A set of PowerShell scripts which provide Git/PowerShell integration
 
 ### Prompt for Git repositories
-   The prompt within Git repositories can show the current branch and the state of files (additions, modifications, deletions) within.
+   The prompt within Git repositories can show the current branch and the state of files (additions, modifications, deletions) within. This uses GitPrompt tools which enables displaying fast prompts. For more information about gitprompt, refer to https://github.com/fieryorc/gitprompt 
    
 ### Tab completion
    Provides tab completion for common commands when using git.  
