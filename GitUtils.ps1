@@ -118,7 +118,8 @@ function Get-GitStatus($gitDir = (Get-GitDirectory)) {
 
         if($settings.EnableFileStatus -and !$(InDisabledRepository)) {
             dbg 'Getting status' $sw
-            $status = git -c color.status=false status --short --branch 2>$null
+            # $status = git -c color.status=false status --short --branch 2>$null
+            $status = GitPromptClient 2>$null
         } else {
             $status = @()
         }
@@ -128,36 +129,16 @@ function Get-GitStatus($gitDir = (Get-GitDirectory)) {
             dbg "Status: $_" $sw
             if($_) {
                 switch -regex ($_) {
-                    '^(?<index>[^#])(?<working>.) (?<path1>.*?)(?: -> (?<path2>.*))?$' {
-                        switch ($matches['index']) {
-                            'A' { $indexAdded += $matches['path1'] }
-                            'M' { $indexModified += $matches['path1'] }
-                            'R' { $indexModified += $matches['path1'] }
-                            'C' { $indexModified += $matches['path1'] }
-                            'D' { $indexDeleted += $matches['path1'] }
-                            'U' { $indexUnmerged += $matches['path1'] }
-                        }
-                        switch ($matches['working']) {
-                            '?' { $filesAdded += $matches['path1'] }
-                            'A' { $filesAdded += $matches['path1'] }
-                            'M' { $filesModified += $matches['path1'] }
-                            'D' { $filesDeleted += $matches['path1'] }
-                            'U' { $filesUnmerged += $matches['path1'] }
-                        }
-                    }
-
-                    '^## (?<branch>\S+?)(?:\.\.\.(?<upstream>\S+))?(?: \[(?:ahead (?<ahead>\d+))?(?:, )?(?:behind (?<behind>\d+))?\])?$' {
-                        $branch = $matches['branch']
-                        $upstream = $matches['upstream']
-                        $aheadBy = [int]$matches['ahead']
-                        $behindBy = [int]$matches['behind']
-                    }
-
-                    '^## Initial commit on (?<branch>\S+)$' {
-                        $branch = $matches['branch']
+                    '^\((?<branch>\S+)\) i\[\+(?<ia>\d+), -(?<id>\d+), \~(?<im>\d+)\] w\[\+(?<fa>\d+), -(?<fd>\d+), \~(?<fm>\d+)\]$' {
+                        $indexAdded = $matches['ia']
+                        $indexModified = $matches['im']
+                        $indexDeleted = $matches['id']
+                        $filesAdded = $matches['fa']
+                        $filesModified = $matches['fm']
+                        $filesDeleted = $matches['fd']
                     }
                 }
-            }
+           }
         }
 
         if(!$branch) { $branch = Get-GitBranch $gitDir $sw }

@@ -28,3 +28,6 @@ Enable-GitColors
 Pop-Location
 
 Start-SshAgent -Quiet
+
+$installDir = Split-Path $MyInvocation.MyCommand.Path -Parent
+$env:path += $installdir
