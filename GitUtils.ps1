@@ -133,7 +133,7 @@ function Get-GitStatus($gitDir = (Get-GitDirectory)) {
                 dbg "Status: $_" $sw
                 if($_) {
                     switch -regex ($_) {
-                        '^\((?<branch>\S+)\) i\[\+(?<ia>\d+), -(?<id>\d+), \~(?<im>\d+)\] w\[\+(?<fa>\d+), -(?<fd>\d+), \~(?<fm>\d+)\] (?<state>\S+)$' {
+                        '^\((?<branch>\S+)\) i\[\+(?<ia>\d+), -(?<id>\d+), \~(?<im>\d+)\] w\[\+(?<fa>\d+), -(?<fd>\d+), \~(?<fm>\d+)\] (?<state>\S+) (?<ahead>\d+) (?<behind>\d+)$' {
                             $branch = $matches['branch']
                             $indexAddedCount = $matches['ia']
                             $indexModifiedCount = $matches['im']
@@ -141,6 +141,8 @@ function Get-GitStatus($gitDir = (Get-GitDirectory)) {
                             $filesAddedCount = $matches['fa']
                             $filesModifiedCount = $matches['fm']
                             $filesDeletedCount = $matches['fd']
+                            $aheadBy = $matches['ahead']
+                            $behindBy = $matches['behind']
                         }
                     }
                 }
